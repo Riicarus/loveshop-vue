@@ -5,16 +5,27 @@
     <el-table-column prop="numbering" label="位置" width="140px"></el-table-column>
     <el-table-column prop="amount" label="库存" width="140px"></el-table-column>
     <el-table-column prop="price" label="价格" width="140px"></el-table-column>
-    <el-table-column fixed="right" width="150px">
+    <el-table-column fixed="right" width="200px">
       <template #default="scope">
         <el-button size="small" @click="handleEdit(scope.row)">修改</el-button>
+        <el-button size="small" type="primary" @click="handleAddAmount(scope.row.id)">增量</el-button>
         <el-button size="small" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
       </template>
     </el-table-column>
     <el-table-column></el-table-column>
   </el-table>
 
-  <el-dialog v-model="editFormVisible" title="编辑货物信息">
+  <el-dialog v-model="addAmountFormVisible" title="增加商品">
+    <el-input style="width: 50%" v-model="addAmountInfo.amount" autocomplete="on"/>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="addAmountFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleAddConfirm">确认</el-button>
+      </span>
+    </template>
+  </el-dialog>
+
+  <el-dialog v-model="editFormVisible" title="编辑商品信息">
     <el-form :model="dailyNecessity">
       <el-form-item label="编号" :label-width="140">
         <el-input v-model="dailyNecessity.id" autocomplete="on" disabled/>
@@ -62,6 +73,7 @@ export default {
     return {
       dailyNecessityList: [],
       editFormVisible: false,
+      addAmountFormVisible: false,
       dailyNecessity: {
         id: '',
         name: '',
@@ -81,6 +93,10 @@ export default {
         currentPage: 1,
         size: 8,
         total: 80,
+      },
+      addAmountInfo: {
+        id: 0,
+        amount: 0
       }
     }
   },
@@ -164,6 +180,41 @@ export default {
 
       this.doUpdateDailyNecessity(this.rawDailyNecessity);
       location.reload();
+    },
+    handleAddAmount: function (id) {
+      this.addAmountInfo.id = id;
+      this.addAmountFormVisible = true;
+    },
+    handleAddConfirm: function () {
+      console.log(this.addAmountInfo);
+
+      if (this.addAmountInfo.amount <= 0) {
+        window.alert("增加的数量应该是一个正整数!");
+        this.amount = 0;
+        return;
+      }
+
+      axios.put(
+          this.$store.state.host + "/commodity/amount/" + this.addAmountInfo.id + "/" + this.addAmountInfo.amount,
+          {},
+          {
+            headers: {
+              auth: this.$store.state.token
+            }
+          }
+      )
+          .then(res => {
+                if (res.data.code !== 600) {
+                  window.confirm("增加库存失败!");
+                } else {
+                  window.confirm("增加库存成功!");
+                }
+                location.reload();
+              }
+          );
+
+      this.addAmountFormVisible = false;
+      this.addAmountInfo.amount = 0;
     },
     handlePageChange: function (currentPage) {
       this.page.currentPage = currentPage;
