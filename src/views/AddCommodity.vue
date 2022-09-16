@@ -83,7 +83,7 @@ export default {
         },
         {
           label: '日用品',
-          value: 'DAILY_NECESSITY '
+          value: 'DAILY_NECESSITY'
         },
         {
           label: '体育用品',

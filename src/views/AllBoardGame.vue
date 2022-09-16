@@ -39,6 +39,18 @@
       </span>
     </template>
   </el-dialog>
+
+  <div class="page">
+    <el-pagination
+        @current-change="handlePageChange"
+        :current-page="page.currentPage"
+        :hide-on-single-page="true"
+        :page-size="page.size"
+        :pager-count="7"
+        layout="prev, pager, next"
+        :total="page.total"
+    />
+  </div>
 </template>
 
 <script>
@@ -64,16 +76,36 @@ export default {
         amount: '',
         price: '',
         extension: null
+      },
+      page: {
+        currentPage: 1,
+        size: 8,
+        total: 80,
       }
     }
   },
   created() {
-    this.doGetBoardGameInfo();
+    this.doGetPaginationInfo();
+    this.doGetBoardGameInfo(this.page.currentPage, this.page.size);
   },
   methods: {
-    doGetBoardGameInfo: function () {
+    doGetPaginationInfo: function () {
       axios.get(
-          this.$store.state.host + "/commodity/info/simple/boardGame/1/5"
+          this.$store.state.host + "/commodity/pagination/BOARD_GAME",
+          {
+            headers: {
+              auth: this.$store.state.token
+            }
+          }
+      )
+          .then(res => {
+                this.page.total = res.data.data.total;
+              }
+          );
+    },
+    doGetBoardGameInfo: function (currentPage, size) {
+      axios.get(
+          this.$store.state.host + "/commodity/info/simple/boardGame/" + currentPage + "/" + size
       )
           .then(res => {
                 this.boardGameList = res.data.data.records;
@@ -132,11 +164,21 @@ export default {
 
       this.doUpdateBoardGame(this.rawBoardGame);
       location.reload();
+    },
+    handlePageChange: function (currentPage) {
+      this.page.currentPage = currentPage;
+      this.doGetBoardGameInfo(this.page.currentPage, this.page.size);
     }
   }
 }
 </script>
 
 <style scoped>
+.page {
+  margin: 10px auto;
+}
 
+.el-pagination {
+  justify-content: center;
+}
 </style>

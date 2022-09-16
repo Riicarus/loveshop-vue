@@ -78,19 +78,30 @@ export default {
       },
       activeButtonIndex: 0,
       page: {
-        currentPage: 3,
+        currentPage: 1,
         size: 8,
         total: 80,
       }
     }
   },
   created() {
-    this.doGetPaginationInfo();
+    this.doGetPaginationInfo('all');
     this.doGetOrderInfo(this.page.currentPage, this.page.size);
   },
   methods: {
-    doGetPaginationInfo: function () {
-
+    doGetPaginationInfo: function (status) {
+      axios.get(
+          this.$store.state.host + "/order/pagination/" + status,
+          {
+            headers: {
+              auth: this.$store.state.token
+            }
+          }
+      )
+          .then(res => {
+            this.page.total = res.data.data.total;
+          }
+          );
     },
     doGetOrderInfo: function (page, size) {
       axios.get(
@@ -208,22 +219,24 @@ export default {
     },
     handleGetAllOrder: function () {
       this.page.currentPage = 1;
+      this.doGetPaginationInfo('all');
       this.doGetOrderInfo(this.page.currentPage, this.page.size);
       this.activeButtonIndex = 0;
     },
     handleGetPayedOrder: function () {
       this.page.currentPage = 1;
+      this.doGetPaginationInfo('payed');
       this.doGetPayedOrderInfo(this.page.currentPage, this.page.size);
       this.activeButtonIndex = 1;
     },
     handleGetUnPayedOrder: function () {
       this.page.currentPage = 1;
+      this.doGetPaginationInfo('unpayed');
       this.doGetUnPayedOrderInfo(this.page.currentPage, this.page.size);
       this.activeButtonIndex = 2;
     },
     handlePageChange: function (currentPage) {
       this.page.currentPage = currentPage;
-      console.log(this.page.currentPage);
 
       if (this.activeButtonIndex === 0) {
         this.doGetOrderInfo(this.page.currentPage, this.page.size);

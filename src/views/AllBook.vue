@@ -58,6 +58,18 @@
       </span>
     </template>
   </el-dialog>
+
+  <div class="page">
+    <el-pagination
+        @current-change="handlePageChange"
+        :current-page="page.currentPage"
+        :hide-on-single-page="true"
+        :page-size="page.size"
+        :pager-count="7"
+        layout="prev, pager, next"
+        :total="page.total"
+    />
+  </div>
 </template>
 
 <script>
@@ -90,16 +102,36 @@ export default {
           authors: [],
           publisher: ''
         }
+      },
+      page: {
+        currentPage: 1,
+        size: 8,
+        total: 80,
       }
     }
   },
   created() {
-    this.doGetBookInfo();
+    this.doGetPaginationInfo();
+    this.doGetBookInfo(this.page.currentPage, this.page.size);
   },
   methods: {
-    doGetBookInfo: function () {
+    doGetPaginationInfo: function () {
       axios.get(
-          this.$store.state.host + "/commodity/info/simple/book/1/5"
+          this.$store.state.host + "/commodity/pagination/BOOK",
+          {
+            headers: {
+              auth: this.$store.state.token
+            }
+          }
+      )
+          .then(res => {
+                this.page.total = res.data.data.total;
+              }
+          );
+    },
+    doGetBookInfo: function (currentPage, size) {
+      axios.get(
+          this.$store.state.host + "/commodity/info/simple/book/" + currentPage + "/" + size
       )
           .then(res => {
                 this.bookList = res.data.data.records;
@@ -164,11 +196,21 @@ export default {
 
       this.doUpdateBook(this.rawBook);
       location.reload();
+    },
+    handlePageChange: function (currentPage) {
+      this.page.currentPage = currentPage;
+      this.doGetBookInfo(this.page.currentPage, this.page.size);
     }
   }
 }
 </script>
 
 <style scoped>
+.page {
+  margin: 10px auto;
+}
 
+.el-pagination {
+  justify-content: center;
+}
 </style>

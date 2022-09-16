@@ -39,6 +39,18 @@
       </span>
     </template>
   </el-dialog>
+
+  <div class="page">
+    <el-pagination
+        @current-change="handlePageChange"
+        :current-page="page.currentPage"
+        :hide-on-single-page="true"
+        :page-size="page.size"
+        :pager-count="7"
+        layout="prev, pager, next"
+        :total="page.total"
+    />
+  </div>
 </template>
 
 <script>
@@ -64,16 +76,36 @@ export default {
         amount: '',
         price: '',
         extension: null
+      },
+      page: {
+        currentPage: 1,
+        size: 8,
+        total: 80,
       }
     }
   },
   created() {
-    this.doGetCulturalCreativityInfo();
+    this.doGetPaginationInfo();
+    this.doGetCulturalCreativityInfo(this.page.currentPage, this.page.size);
   },
   methods: {
-    doGetCulturalCreativityInfo: function () {
+    doGetPaginationInfo: function () {
       axios.get(
-          this.$store.state.host + "/commodity/info/simple/culturalCreativity/1/5"
+          this.$store.state.host + "/commodity/pagination/CULTURAL_CREATIVITY",
+          {
+            headers: {
+              auth: this.$store.state.token
+            }
+          }
+      )
+          .then(res => {
+                this.page.total = res.data.data.total;
+              }
+          );
+    },
+    doGetCulturalCreativityInfo: function (currentPage, size) {
+      axios.get(
+          this.$store.state.host + "/commodity/info/simple/culturalCreativity/" + currentPage + "/" + size
       )
           .then(res => {
                 this.culturalCreativityList = res.data.data.records;
@@ -132,11 +164,21 @@ export default {
 
       this.doUpdateCulturalCreativity(this.rawCulturalCreativity);
       location.reload();
+    },
+    handlePageChange: function (currentPage) {
+      this.page.currentPage = currentPage;
+      this.doGetCulturalCreativityInfo(this.page.currentPage, this.page.size);
     }
   }
 }
 </script>
 
 <style scoped>
+.page {
+  margin: 10px auto;
+}
 
+.el-pagination {
+  justify-content: center;
+}
 </style>
