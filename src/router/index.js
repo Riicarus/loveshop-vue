@@ -52,9 +52,14 @@ const routes = [
         component: () => import('../views/OrderManage')
       },
       {
-        path: '/bill',
-        name: 'bill',
+        path: '/billManage',
+        name: 'billManage',
         component: () => import('../views/BillManage')
+      },
+      {
+        path: '/billAnalyze',
+        name: 'billAnalyze',
+        component: () => import('../views/BillAnalyze')
       },
       {
         path: '/activity',
@@ -67,9 +72,14 @@ const routes = [
         component: () => import('../views/NoticeManage')
       },
       {
-        path: '/manageAttendance',
-        name: 'manageAttendance',
-        component: () => import('../views/AttendanceManage')
+        path: '/importAttendance',
+        name: 'importAttendance',
+        component: () => import('../views/AttendanceImport')
+      },
+      {
+        path: '/importAdmin',
+        name: 'importAdmin',
+        component: () => import('../views/AdminImport')
       },
       {
         path: '/logAttendance',

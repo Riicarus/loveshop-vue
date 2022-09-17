@@ -8,7 +8,8 @@ export default createStore({
     'admin': {
       'id': '',
       'name': '',
-      'studentId': ''
+      'studentId': '',
+      'type': ''
     },
 
   },
@@ -22,7 +23,8 @@ export default createStore({
       state.admin = {
         id: data.id,
         name: data.name,
-        studentId: data.studentId
+        studentId: data.studentId,
+        type: data.type
       };
     }
   },
