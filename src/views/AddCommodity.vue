@@ -116,7 +116,12 @@ export default {
           }
       )
           .then(res => {
-                console.log(res)
+                if (res.data.code !== 600) {
+                  window.alert("添加失败, 请查看数据是否符合要求!")
+                } else {
+                  window.alert("添加成功!")
+                  this.resetForm();
+                }
               }
           );
     },
@@ -137,7 +142,6 @@ export default {
     },
     handleAdd: function () {
       this.doAddCommodity();
-      this.resetForm();
     }
   }
 }

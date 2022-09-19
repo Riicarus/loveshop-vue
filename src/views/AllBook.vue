@@ -166,7 +166,12 @@ export default {
           }
       )
           .then(res => {
-                console.log(res);
+                if (res.data.code !== 600) {
+                  window.alert("更改失败, 请检查数据是否符合要求!");
+                } else {
+                  location.reload();
+                  window.alert("更改成功!");
+                }
               }
           );
     },
@@ -180,10 +185,13 @@ export default {
           }
       )
           .then(res => {
-                console.log(res);
-                location.reload();
-              }
-          );
+            if (res.data.code !== 600) {
+              window.alert("删除失败!");
+            } else {
+              location.reload();
+              window.alert("删除成功!");
+            }
+          });
     },
     handleEdit: function (row) {
       this.editFormVisible = true;
@@ -211,7 +219,6 @@ export default {
       this.rawBook.extension.ISBN = book.ISBN;
 
       this.doUpdateBook(this.rawBook);
-      location.reload();
     },
     handleAddAmount: function (id) {
       this.addAmountInfo.id = id;
