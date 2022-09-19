@@ -54,10 +54,10 @@
       <el-form-item label="ISBN" :label-width="140">
         <el-input v-model="book.ISBN" autocomplete="on" />
       </el-form-item>
-      <el-form-item label="authors" :label-width="140">
+      <el-form-item label="作者" :label-width="140">
         <el-input v-model="book.authors" autocomplete="on" />
       </el-form-item>
-      <el-form-item label="publisher" :label-width="140">
+      <el-form-item label="出版商" :label-width="140">
         <el-input v-model="book.publisher" autocomplete="on" />
       </el-form-item>
 
