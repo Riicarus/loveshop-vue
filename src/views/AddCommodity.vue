@@ -116,7 +116,9 @@ export default {
           }
       )
           .then(res => {
-                if (res.data.code !== 600) {
+                if (res.data.code === 604) {
+                  window.alert("添加失败, 已有该商品!")
+                } else if (res.data.code !== 600) {
                   window.alert("添加失败, 请查看数据是否符合要求!")
                 } else {
                   window.alert("添加成功!")
