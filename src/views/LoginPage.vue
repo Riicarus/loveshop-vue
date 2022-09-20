@@ -12,7 +12,7 @@
             <el-input v-model="admin.password" show-password placeholder="请输入密码" prefix-icon></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" icon="el-icon-upload" @click="doLogin()">登录</el-button>
+            <el-button type="primary" @click="doLogin()">登录</el-button>
           </el-form-item>
         </el-form>
       </el-row>
