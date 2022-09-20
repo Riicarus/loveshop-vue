@@ -17,6 +17,11 @@ const routes = [
         component: () => import('../views/AddCommodity')
       },
       {
+        path: '/searchBook',
+        name: 'searchBook',
+        component: () => import('../views/SearchBook')
+      },
+      {
         path: '/book',
         name: 'book',
         component: () => import('../views/AllBook')

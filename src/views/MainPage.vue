@@ -8,6 +8,7 @@
     <el-sub-menu index="/commodity">
       <template #title>商品</template>
       <el-menu-item index="/addCommodity">添加商品</el-menu-item>
+      <el-menu-item index="/searchBook">搜索图书</el-menu-item>
       <el-menu-item index="/book">图书</el-menu-item>
       <el-menu-item index="/culturalCreativity">文创</el-menu-item>
       <el-menu-item index="/dailyNecessity">日用品</el-menu-item>
