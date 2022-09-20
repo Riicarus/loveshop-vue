@@ -22,7 +22,6 @@
 
   <el-table :data="bookList" stripe style="width: 100%">
     <el-table-column prop="" label="#" width="40px"></el-table-column>
-    <el-table-column prop="type" label="类型" width="140px"></el-table-column>
     <el-table-column prop="name" label="名称" width="140px"></el-table-column>
     <el-table-column prop="numbering" label="位置" width="140px"></el-table-column>
     <el-table-column prop="amount" label="库存" width="140px"></el-table-column>
@@ -121,7 +120,6 @@ export default {
       bookList: [],
       book: {
         id: '',
-        type: '',
         name: '',
         numbering: '',
         amount: '',
@@ -132,7 +130,6 @@ export default {
       },
       rawBook: {
         id: '',
-        type: '',
         name: '',
         numbering: '',
         amount: '',
