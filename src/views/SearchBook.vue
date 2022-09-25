@@ -2,7 +2,7 @@
   <div class="searchForm" style="margin: 10px auto; justify-self: center">
     <el-form ref="bookSearchForm" :model="form">
       <el-form-item>
-        <div class="mt-4">
+        <div>
           <el-input
               v-model="form.name"
               placeholder="请输入图书名称">

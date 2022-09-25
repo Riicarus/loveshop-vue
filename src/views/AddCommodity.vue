@@ -30,7 +30,17 @@
         <el-input v-model="commodityAddParam.amount" />
       </el-form-item>
       <el-form-item v-if="value==='BOOK'" label="ISBN">
-        <el-input v-model="extension.ISBN" />
+        <div style="width: 100%;">
+          <el-input
+              v-model="extension.ISBN">
+            <template #append>
+              <el-button
+                  @click="handleSearchISBN">
+                <el-icon><Search/></el-icon>
+              </el-button>
+            </template>
+          </el-input>
+        </div>
       </el-form-item>
       <el-form-item v-if="value==='BOOK'" label="作者">
         <el-input v-model="extension.authors" />
@@ -47,6 +57,7 @@
 </template>
 
 <script>
+import { Search } from '@element-plus/icons-vue'
 import axios from 'axios';
 import { ref } from 'vue';
 
@@ -96,15 +107,14 @@ export default {
       ]
     }
   },
+  components: {
+    Search
+  },
   methods: {
     doAddCommodity: function () {
       this.commodityAddParam.type = this.value;
       if (this.value === 'BOOK') {
-        this.commodityAddParam.extension = {
-          ISBN: this.extension.ISBN,
-          authors: this.extension.authors.split(','),
-          publisher: this.extension.publisher
-        }
+        this.commodityAddParam.extension = this.extension;
       }
       axios.post(
           this.$store.state.host + "/commodity",
@@ -138,12 +148,29 @@ export default {
       };
       this.extension = {
         ISBN: '',
-        authors: '',
+        authors: [],
         publisher: ''
       }
     },
     handleAdd: function () {
       this.doAddCommodity();
+    },
+    handleSearchISBN: function () {
+      axios.get("https://api.jike.xyz/situ/book/isbn/" + this.extension.ISBN + "?apikey=13553.a1dc12ba4903dc9d12c72d9a2b6c4be2.c521e2db6ac2ee389f26b62a714d16b4")
+      .then(res => {
+        if (res.status !== 200) {
+          window.alert("请求失败, 请检查ISBN是否输入正确,或选择手动录入该图书!")
+        } else {
+          let authorList = res.data.data.author.split("/");
+          this.extension.authors = [];
+          for (let string of authorList) {
+            this.extension.authors.push(string.trim());
+          }
+          this.extension.publisher = res.data.data.publishing;
+          this.commodityAddParam.name = (res.data.data.name + " " + res.data.data.subname).trim();
+          this.commodityAddParam.price = res.data.data.price.substring(0, res.data.data.price.length - 1) / 1;
+        }
+      })
     }
   }
 }

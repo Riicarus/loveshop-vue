@@ -4,6 +4,7 @@ import createPersistedState from "vuex-persistedstate"
 export default createStore({
   state: {
     'host': 'http://124.222.158.8:9999/api',
+    //'host': 'http://192.168.43.18:9090',
     'token': '',
     'admin': {
       'id': '',
