@@ -104,7 +104,8 @@ export default {
           label: '桌游',
           value: 'BOARD_GAME'
         }
-      ]
+      ],
+      time: 0
     }
   },
   components: {
@@ -114,6 +115,14 @@ export default {
     doAddCommodity: function () {
       this.commodityAddParam.type = this.value;
       if (this.value === 'BOOK') {
+        if (Object.prototype.toString.call(this.extension.authors) !== "[Object Array]") {
+          let authorList = this.extension.authors.split(",");
+          this.extension.authors = [];
+          for (let string of authorList) {
+            this.extension.authors.push(string.trim());
+          }
+        }
+
         this.commodityAddParam.extension = this.extension;
       }
       axios.post(
@@ -156,21 +165,32 @@ export default {
       this.doAddCommodity();
     },
     handleSearchISBN: function () {
+      let timeNow = new Date().getTime();
+      console.log(timeNow)
+      console.log(this.time)
+      if (this.time !== 0 && timeNow - this.time <= 1100) {
+        window.alert("不要再点啦, 再点要封IP啦!!!!!!");
+      } else {
+        this.doSearchISBN();
+      }
+      this.time = timeNow;
+    },
+    doSearchISBN: function () {
       axios.get("https://api.jike.xyz/situ/book/isbn/" + this.extension.ISBN + "?apikey=13553.a1dc12ba4903dc9d12c72d9a2b6c4be2.c521e2db6ac2ee389f26b62a714d16b4")
-      .then(res => {
-        if (res.status !== 200) {
-          window.alert("请求失败, 请检查ISBN是否输入正确,或选择手动录入该图书!")
-        } else {
-          let authorList = res.data.data.author.split("/");
-          this.extension.authors = [];
-          for (let string of authorList) {
-            this.extension.authors.push(string.trim());
-          }
-          this.extension.publisher = res.data.data.publishing;
-          this.commodityAddParam.name = (res.data.data.name + " " + res.data.data.subname).trim();
-          this.commodityAddParam.price = res.data.data.price.substring(0, res.data.data.price.length - 1) / 1;
-        }
-      })
+          .then(res => {
+            if (res.status !== 200) {
+              window.alert("请求失败, 请检查ISBN是否输入正确,或选择手动录入该图书!")
+            } else {
+              let authorList = res.data.data.author.split("/");
+              this.extension.authors = [];
+              for (let string of authorList) {
+                this.extension.authors.push(string.trim());
+              }
+              this.extension.publisher = res.data.data.publishing;
+              this.commodityAddParam.name = (res.data.data.name + " " + res.data.data.subname).trim();
+              this.commodityAddParam.price = res.data.data.price.substring(0, res.data.data.price.length - 1) / 1;
+            }
+          })
     }
   }
 }
