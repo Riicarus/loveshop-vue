@@ -186,7 +186,7 @@ export default {
             if (res.status !== 200) {
               window.alert("请求失败, 请检查ISBN是否输入正确,或选择手动录入该图书!")
             } else {
-              let authorList = res.data.data.author.split("/");
+              let authorList = (res.data.data.author == null ? [] : res.data.data.author.split("/"));
               this.extension.authors = [];
               for (let string of authorList) {
                 this.extension.authors.push(string.trim());
