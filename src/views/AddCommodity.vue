@@ -114,8 +114,13 @@ export default {
   methods: {
     doAddCommodity: function () {
       this.commodityAddParam.type = this.value;
+
+      console.log(this.extension.authors);
+
+      console.log(Object.prototype.toString.call(this.extension.authors));
+
       if (this.value === 'BOOK') {
-        if (Object.prototype.toString.call(this.extension.authors) !== "[Object Array]") {
+        if (Object.prototype.toString.call(this.extension.authors) !== "[object Array]") {
           let authorList = this.extension.authors.split(",");
           this.extension.authors = [];
           for (let string of authorList) {
