@@ -118,6 +118,7 @@ export default {
       editFormVisible: false,
       addAmountFormVisible: false,
       bookList: [],
+      // 用于修改框属性显示
       book: {
         id: '',
         name: '',
@@ -128,6 +129,7 @@ export default {
         authors: [],
         publisher: ''
       },
+      // 用于更改操作数据传递
       rawBook: {
         id: '',
         name: '',
@@ -230,7 +232,7 @@ export default {
         amount: row.amount,
         price: row.price,
         ISBN: row.extension.ISBN,
-        authors: row.extension.authors,
+        authors: JSON.parse(row.extension.authors),
         publisher: row.extension.publisher
       }
     },
@@ -242,7 +244,13 @@ export default {
       this.rawBook.name = book.name;
       this.rawBook.amount = book.amount;
       this.rawBook.price = book.price;
-      this.rawBook.extension.authors = book.authors;
+
+      let authors = book.authors.toString().split(",");
+      this.rawBook.extension.authors = [];
+      for (let author of authors) {
+        this.rawBook.extension.authors.push(author.trim());
+      }
+
       this.rawBook.extension.publisher = book.publisher;
       this.rawBook.extension.ISBN = book.ISBN;
 
@@ -253,8 +261,6 @@ export default {
       this.addAmountFormVisible = true;
     },
     handleAddConfirm: function () {
-      console.log(this.addAmountInfo);
-
       if (this.addAmountInfo.amount <= 0) {
         window.alert("增加的数量应该是一个正整数!");
         this.amount = 0;
